@@ -1,0 +1,13 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+.secrets.json
+resources/
+testrun*/
+
+#Hardhat files
+cache
+artifacts
