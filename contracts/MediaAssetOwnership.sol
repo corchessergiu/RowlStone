@@ -30,22 +30,13 @@ contract MediaAssetOwnership {
     /// @param owner The owner of the asset.
     /// @param assetURI The asset URI for the registered asset.
     /// @param metadata The metadata for the registered asset.
-    event AssetRegistered(
-        uint256 indexed assetId,
-        address indexed owner,
-        string assetURI,
-        string metadata
-    );
+    event AssetRegistered(uint256 indexed assetId, address indexed owner, string assetURI, string metadata);
 
     /// @notice Emitted when an asset is transfered.
     /// @param assetId The unique identification ID of an asset.
     /// @param from The address that was the previous owner of the asset.
     /// @param to The new owner of the asset.
-    event AssetTransferred(
-        uint256 indexed assetId,
-        address indexed from,
-        address indexed to
-    );
+    event AssetTransferred(uint256 indexed assetId, address indexed from, address indexed to);
 
     /// @notice Function responsible for register an asset.
     /// @dev Reverts if assetURI is null.
@@ -53,25 +44,11 @@ contract MediaAssetOwnership {
     /// @dev Emits the 'AssetRegistered' event.
     /// @param assetURI The asset URI for the asset.
     /// @param metadata The metadata for the asset.
-    function registerAsset(
-        string memory assetURI,
-        string memory metadata
-    ) public {
-        require(
-            bytes(assetURI).length > 0,
-            "MediaAsset: Asset URI cannot be empty!"
-        );
-        require(
-            bytes(metadata).length > 0,
-            "MediaAsset: Metadata cannot be empty!"
-        );
+    function registerAsset(string memory assetURI, string memory metadata) public {
+        require(bytes(assetURI).length > 0, "MediaAsset: Asset URI cannot be empty!");
+        require(bytes(metadata).length > 0, "MediaAsset: Metadata cannot be empty!");
         uint256 assetId = assetGlobalCounter++;
-        assetNumber[assetId] = MediaAsset({
-            id: assetId,
-            owner: msg.sender,
-            assetURI: assetURI,
-            metadata: metadata
-        });
+        assetNumber[assetId] = MediaAsset({id: assetId, owner: msg.sender, assetURI: assetURI, metadata: metadata});
         ownerAssets[msg.sender].push(assetId);
         emit AssetRegistered(assetId, msg.sender, assetURI, metadata);
     }
@@ -85,14 +62,8 @@ contract MediaAssetOwnership {
     /// @param to The metadata for the asset.
     function transferAsset(uint256 assetId, address to) public {
         require(to != address(0), "MediaAsset: Cannot transfer to 0 address!");
-        require(
-            to != msg.sender,
-            "MediaAsset: Cannot transfer to the same address!"
-        );
-        require(
-            assetNumber[assetId].owner == msg.sender,
-            "MediaAsset: Only the asset owner can transfer ownership!"
-        );
+        require(to != msg.sender, "MediaAsset: Cannot transfer to the same address!");
+        require(assetNumber[assetId].owner == msg.sender, "MediaAsset: Only the asset owner can transfer ownership!");
 
         address previousOwner = assetNumber[assetId].owner;
         assetNumber[assetId].owner = to;
@@ -100,9 +71,7 @@ contract MediaAssetOwnership {
         uint256[] storage previousOwnerAssets = ownerAssets[previousOwner];
         for (uint256 i = 0; i < previousOwnerAssets.length; i++) {
             if (previousOwnerAssets[i] == assetId) {
-                previousOwnerAssets[i] = previousOwnerAssets[
-                    previousOwnerAssets.length - 1
-                ];
+                previousOwnerAssets[i] = previousOwnerAssets[previousOwnerAssets.length - 1];
                 previousOwnerAssets.pop();
                 break;
             }
