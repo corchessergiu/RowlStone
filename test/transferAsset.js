@@ -95,9 +95,7 @@ describe("Test transfer function", function () {
 
     let dataBeforeRegister = await MediaAssetOwnershipContract.assetNumber(0);
     expect(Number(dataBeforeRegister[0])).to.equal(0);
-    expect(dataBeforeRegister[1]).to.equal(
-      deployer.address
-    );
+    expect(dataBeforeRegister[1]).to.equal(deployer.address);
     expect(dataBeforeRegister[2]).to.equal(
       "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP7"
     );
@@ -105,13 +103,80 @@ describe("Test transfer function", function () {
 
     await MediaAssetOwnershipContract.transferAsset(0, add1.address);
 
-     let dataAfterRegister = await MediaAssetOwnershipContract.assetNumber(0);
-     expect(Number(dataAfterRegister[0])).to.equal(0);
-     expect(dataAfterRegister[1]).to.equal(add1.address);
-     expect(dataAfterRegister[2]).to.equal(
-       "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP7"
-     );
-     expect(dataAfterRegister[3]).to.equal(JSON.stringify(metadata));
+    let dataAfterTransfer = await MediaAssetOwnershipContract.assetNumber(0);
+    expect(Number(dataAfterTransfer[0])).to.equal(0);
+    expect(dataAfterTransfer[1]).to.equal(add1.address);
+    expect(dataAfterTransfer[2]).to.equal(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP7"
+    );
+    expect(dataAfterTransfer[3]).to.equal(JSON.stringify(metadata));
+  });
 
+  it("Should execute multiple transfers with same asset", async function () {
+    //Register asset with deployer adddress
+    await MediaAssetOwnershipContract.registerAsset(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP7",
+      JSON.stringify(metadata)
+    );
+
+    let dataAfterRegister = await MediaAssetOwnershipContract.assetNumber(0);
+    expect(Number(dataAfterRegister[0])).to.equal(0);
+    expect(dataAfterRegister[1]).to.equal(deployer.address);
+    expect(dataAfterRegister[2]).to.equal(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP7"
+    );
+    expect(dataAfterRegister[3]).to.equal(JSON.stringify(metadata));
+
+    //Transfer asset with id 0 from deloyer to add1
+    await MediaAssetOwnershipContract.transferAsset(0, add1.address);
+
+    let dataAfterFirstTransfer = await MediaAssetOwnershipContract.assetNumber(
+      0
+    );
+    expect(dataAfterFirstTransfer[1]).to.equal(add1.address);
+
+    //Transfer asset with id 0 from add1 to add2
+    await MediaAssetOwnershipContract.connect(add1).transferAsset(
+      0,
+      add2.address
+    );
+
+    let dataAfterSecondTransfer = await MediaAssetOwnershipContract.assetNumber(
+      0
+    );
+    expect(dataAfterSecondTransfer[1]).to.equal(add2.address);
+
+    //Transfer asset with id 0 from add2 to add3
+    await MediaAssetOwnershipContract.connect(add2).transferAsset(
+      0,
+      add3.address
+    );
+
+    let dataAfterThirdTransfer = await MediaAssetOwnershipContract.assetNumber(
+      0
+    );
+    expect(dataAfterThirdTransfer[1]).to.equal(add3.address);
+
+    //Transfer asset with id 0 from add3 to add4
+    await MediaAssetOwnershipContract.connect(add3).transferAsset(
+      0,
+      add4.address
+    );
+
+    let dataAfterForthTransfer = await MediaAssetOwnershipContract.assetNumber(
+      0
+    );
+    expect(dataAfterForthTransfer[1]).to.equal(add4.address);
+
+    //Transfer asset with id 0 from add4 back to deployer
+    await MediaAssetOwnershipContract.connect(add4).transferAsset(
+      0,
+      deployer.address
+    );
+
+    let dataAfterFifthTransfer = await MediaAssetOwnershipContract.assetNumber(
+      0
+    );
+    expect(dataAfterFifthTransfer[1]).to.equal(deployer.address);
   });
 });
