@@ -10,6 +10,8 @@
 3. Running tests
 `npx hardhat test` 
 
+![test](https://github.com/corchessergiu/Rowlstone/assets/61419684/d2d3ee01-8992-4845-8d62-53961123e872)
+
 4. Running coverage
 `npx hardhat coverage`
 
