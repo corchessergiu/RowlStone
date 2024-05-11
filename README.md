@@ -1,6 +1,6 @@
 ### Prerequisites
 * npm 10.5
-* node v20+
+* node v20+  -> [nvm use 20]
 
 ### Execute all the commands below in the root directory!
 ### Steps
