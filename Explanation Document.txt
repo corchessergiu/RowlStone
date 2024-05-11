@@ -1,0 +1,31 @@
+Smart contract: 
+
+The smart contract serves as a method for storing digital assets using blockchain technology. 
+The contract contains four functions: registerAsset, transferAsset, verifyOwnership, and getAllAssets.
+This contract relies on a global counter that increments each time a new asset is registered. 
+To store information for each digital asset, we use a structure called MediaAsset, which includes 
+the asset's ID, the current owner of the asset, the asset URI, and metadata.
+
+To identify an asset based on its ID, we use a mapping called assetNumber, which takes an asset ID 
+as a parameter and returns the corresponding information for that asset. Another mapping used in the 
+smart contract is ownerAssets, which stores the IDs of the assets owned by an owner. This mapping takes
+the owner's address and the asset ID as parameters to provide information about the assets. Additionally, 
+when an asset is transferred, the MediaAsset structure for the owner is updated, and the ownerAssets mapping
+is modified. Specifically, the asset ID is removed from the old owner's assets array and added to the new 
+owner's assets array.
+
+To view the asset IDs owned by an owner, the getAllAssets function can be used, taking the owner's address
+as a parameter to display the assets owned.
+
+Test folder:
+
+In the test folder, I have written various tests for the functions in the smart contract. Different scenarios 
+were covered, and I achieved 100% coverage for the contract!
+
+Hardhat.config
+
+In the hardhat.config.js file, I have set the Solidity version and configured the local Hardhat network.
+
+
+
+
