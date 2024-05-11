@@ -179,4 +179,68 @@ describe("Test transfer function", function () {
     );
     expect(dataAfterFifthTransfer[1]).to.equal(deployer.address);
   });
+
+  it("Transfer multiple asset from same owner and verify ownership", async function () {
+    await MediaAssetOwnershipContract.registerAsset(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP7",
+      JSON.stringify(metadata)
+    );
+    await MediaAssetOwnershipContract.registerAsset(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP8",
+      JSON.stringify(metadata)
+    );
+
+    await MediaAssetOwnershipContract.registerAsset(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP2",
+      JSON.stringify(metadata)
+    );
+    await MediaAssetOwnershipContract.registerAsset(
+      "ipfs://QmTzQ1gY5DJzRRT6t8i5TSz4E2WV1fyCJo2gDGGQNcKsP3",
+      JSON.stringify(metadata)
+    );
+
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(1, deployer.address)
+    ).to.equal(true);
+    await MediaAssetOwnershipContract.transferAsset(1, add1.address);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(1, deployer.address)
+    ).to.equal(false);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(1, add1.address)
+    ).to.equal(true);
+
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(2, deployer.address)
+    ).to.equal(true);
+    await MediaAssetOwnershipContract.transferAsset(2, add3.address);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(2, deployer.address)
+    ).to.equal(false);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(2, add3.address)
+    ).to.equal(true);
+
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(0, deployer.address)
+    ).to.equal(true);
+    await MediaAssetOwnershipContract.transferAsset(0, add4.address);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(0, deployer.address)
+    ).to.equal(false);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(0, add4.address)
+    ).to.equal(true);
+
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(3, deployer.address)
+    ).to.equal(true);
+    await MediaAssetOwnershipContract.transferAsset(3, add1.address);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(3, deployer.address)
+    ).to.equal(false);
+    expect(
+      await MediaAssetOwnershipContract.verifyOwnership(3, add1.address)
+    ).to.equal(true);
+  });
 });

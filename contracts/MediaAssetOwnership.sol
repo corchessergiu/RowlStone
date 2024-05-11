@@ -58,8 +58,8 @@ contract MediaAssetOwnership {
     /// @dev Reverts if to parameter it is the same as msg.sender.
     /// @dev Reverts if the caller of the function is not the owner of the assetId sent as a parameter.
     /// @dev Emits the 'AssetTransferred' event.
-    /// @param assetId The asset URI for the asset.
-    /// @param to The metadata for the asset.
+    /// @param assetId The unique identifier of an asset.
+    /// @param to The address to which the asset will be transferred.
     function transferAsset(uint256 assetId, address to) public {
         require(to != address(0), "MediaAsset: Cannot transfer to 0 address!");
         require(to != msg.sender, "MediaAsset: Cannot transfer to the same address!");
@@ -79,5 +79,12 @@ contract MediaAssetOwnership {
         ownerAssets[to].push(assetId);
 
         emit AssetTransferred(assetId, previousOwner, to);
+    }
+
+    /// @notice Function responsible for verifying the ownership of an asset.
+    /// @param assetId The unique identifier of an asset.
+    /// @param owner The address that is presumed to be the address holding the asset.
+    function verifyOwnership(uint256 assetId, address owner) public view returns (bool) {
+        return assetNumber[assetId].owner == owner;
     }
 }
