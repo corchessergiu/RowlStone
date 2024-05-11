@@ -87,4 +87,10 @@ contract MediaAssetOwnership {
     function verifyOwnership(uint256 assetId, address owner) public view returns (bool) {
         return assetNumber[assetId].owner == owner;
     }
+
+    /// @notice Function returns all the asset IDs owned by an owner.
+    /// @param owner The address of the owner for whom we want to retrieve the IDs.
+    function getAllAssets(address owner) public view returns (uint256[] memory) {
+        return ownerAssets[owner];
+    }
 }

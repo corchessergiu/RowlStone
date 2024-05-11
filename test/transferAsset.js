@@ -199,6 +199,15 @@ describe("Test transfer function", function () {
       JSON.stringify(metadata)
     );
 
+    let allDeployerIDsAssets = await MediaAssetOwnershipContract.getAllAssets(
+      deployer.address
+    );
+    expect(allDeployerIDsAssets.length).to.equal(4);
+    expect(Number(allDeployerIDsAssets[0])).to.equal(0);
+    expect(Number(allDeployerIDsAssets[1])).to.equal(1);
+    expect(Number(allDeployerIDsAssets[2])).to.equal(2);
+    expect(Number(allDeployerIDsAssets[3])).to.equal(3);
+
     expect(
       await MediaAssetOwnershipContract.verifyOwnership(1, deployer.address)
     ).to.equal(true);
