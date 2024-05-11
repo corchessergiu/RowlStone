@@ -1,3 +1,7 @@
+### Prerequisites
+* npm 10.5
+* node v20+
+
 ### Execute all the commands below in the root directory!
 ### Steps
 
